@@ -16,7 +16,6 @@
 }
 
 body {
-  /* Use pixel font as default */
   font-family: 'Pixelify Sans', sans-serif;
   overflow: hidden;
   background: url('/wallpaper.png') no-repeat center center fixed;
@@ -33,7 +32,6 @@ body {
   flex-direction: column;
 }
 
-/* Glassmorphism for dock only */
 .glass {
   background: var(--glass-bg);
   backdrop-filter: blur(12px);
@@ -42,10 +40,103 @@ body {
   box-shadow: var(--glass-shadow);
 }
 
-/* Icons */
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }
+
+/* --- Boot Screen Styles --- */
+.boot-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'VT323', monospace;
+  z-index: 99999;
+}
+
+.boot-logo {
+  font-size: 80px !important;
+  color: #3b82f6; 
+  text-shadow: 2px 2px 0px #1e3a8a;
+  margin-bottom: 40px;
+}
+
+.boot-text-container {
+  text-align: center;
+  margin-bottom: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.boot-title {
+  font-size: 18px;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+  color: #aaa;
+}
+
+.boot-desc {
+  font-size: 22px;
+  line-height: 1.4;
+}
+
+.boot-fullscreen-btn {
+  margin-top: 24px;
+  background: #fff;
+  color: #000;
+  border: 2px solid #fff;
+  padding: 8px 24px;
+  font-family: 'VT323', monospace;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.boot-fullscreen-btn:hover {
+  background: #000;
+  color: #fff;
+}
+
+.boot-progress-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 300px;
+}
+
+.boot-progress-bar-bg {
+  width: 100%;
+  height: 4px;
+  background: #333;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.boot-progress-bar-fill {
+  height: 100%;
+  background: #fff;
+  transition: width 0.2s ease-out;
+}
+
+.boot-progress-text {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.boot-loading-text {
+  font-size: 16px;
+  color: #aaa;
+}
+
 
 /* --- TopBar Styles --- */
 .top-bar {
@@ -55,7 +146,6 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
-  /* Retro TopBar: solid light blue with dark text, or transparent gradient */
   background: rgba(255,255,255,0.7);
   backdrop-filter: blur(5px);
   border-bottom: 2px solid var(--retro-border);
@@ -224,7 +314,7 @@ body {
   font-size: 16px;
   text-align: center;
   font-weight: 500;
-  text-shadow: 2px 2px 0px #000; /* Retro shadow */
+  text-shadow: 2px 2px 0px #000;
 }
 
 /* --- Retro Window Styles --- */
@@ -301,7 +391,6 @@ body {
   overflow: auto;
 }
 
-/* Animations */
 @keyframes slideUp {
   0% { transform: translate(-50%, 20px); opacity: 0; }
   100% { transform: translate(-50%, 0); opacity: 1; }

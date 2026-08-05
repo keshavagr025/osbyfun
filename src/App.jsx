@@ -2,6 +2,57 @@ import React, { useState, useEffect, useRef } from 'react';
 import Draggable from 'react-draggable';
 import './index.css';
 
+const BootScreen = ({ onComplete }) => {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProgress(p => {
+        if (p >= 100) {
+          clearInterval(interval);
+          setTimeout(onComplete, 800); // Wait a bit at 100% before closing
+          return 100;
+        }
+        return Math.min(100, p + Math.floor(Math.random() * 8) + 2); 
+      });
+    }, 150);
+    return () => clearInterval(interval);
+  }, [onComplete]);
+
+  const enterFullscreen = () => {
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen();
+    }
+  };
+
+  return (
+    <div className="boot-screen">
+      <div className="boot-logo-container">
+        <span className="material-symbols-outlined boot-logo">cruelty_free</span>
+      </div>
+      
+      <div className="boot-text-container">
+        <p className="boot-title">SYSTEM NOTICE</p>
+        <p className="boot-desc">Retrium OS has sound. Headphones recommended.</p>
+        <p className="boot-desc" style={{ marginTop: '16px' }}>Fullscreen puts the browser away<br/>and leaves only the desktop.</p>
+        
+        <button className="boot-fullscreen-btn" onClick={enterFullscreen}>
+          Enter Fullscreen
+        </button>
+        <p style={{ fontSize: '14px', color: '#666', marginTop: '12px' }}>Esc leaves fullscreen whenever you want.</p>
+      </div>
+
+      <div className="boot-progress-container">
+        <div className="boot-progress-bar-bg">
+          <div className="boot-progress-bar-fill" style={{ width: `${progress}%` }}></div>
+        </div>
+        <p className="boot-progress-text">{progress}%</p>
+        <p className="boot-loading-text">Starting Retrium OS...</p>
+      </div>
+    </div>
+  );
+};
+
 const TopBar = () => {
   const [time, setTime] = useState(new Date());
 
@@ -295,14 +346,19 @@ const MusicPlayerApp = () => {
 };
 
 function App() {
+  const [isBooting, setIsBooting] = useState(true);
   const [apps, setApps] = useState([
-    { id: 'Terminal', title: 'Terminal', isOpen: true, zIndex: 1, position: { x: 50, y: 50 }, width: 450, height: 320 },
-    { id: 'Calculator', title: 'Calculator', isOpen: true, zIndex: 2, position: { x: 300, y: 100 }, width: 280, height: 380 },
-    { id: 'Trash', title: 'Trash', isOpen: true, zIndex: 3, position: { x: 150, y: 250 }, width: 400, height: 250 },
-    { id: 'Music', title: 'Music Player', isOpen: true, zIndex: 4, position: { x: 550, y: 150 }, width: 320, height: 420 }
+    { id: 'Terminal', title: 'Terminal', isOpen: false, zIndex: 1, position: { x: 50, y: 50 }, width: 450, height: 320 },
+    { id: 'Calculator', title: 'Calculator', isOpen: false, zIndex: 2, position: { x: 300, y: 100 }, width: 280, height: 380 },
+    { id: 'Trash', title: 'Trash', isOpen: false, zIndex: 3, position: { x: 150, y: 250 }, width: 400, height: 250 },
+    { id: 'Music', title: 'Music Player', isOpen: false, zIndex: 4, position: { x: 550, y: 150 }, width: 320, height: 420 }
   ]);
   
   const [activeZIndex, setActiveZIndex] = useState(10);
+
+  if (isBooting) {
+    return <BootScreen onComplete={() => setIsBooting(false)} />;
+  }
 
   const toggleApp = (id) => {
     setApps(apps.map(app => {
@@ -311,7 +367,6 @@ function App() {
           setActiveZIndex(prev => prev + 1);
           return { ...app, isOpen: true, zIndex: activeZIndex + 1 };
         }
-        // If it is open and we click dock, bring to front
         setActiveZIndex(prev => prev + 1);
         return { ...app, zIndex: activeZIndex + 1 };
       }
