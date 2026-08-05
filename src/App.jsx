@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Draggable from 'react-draggable';
 import './index.css';
 
@@ -75,7 +75,7 @@ const Window = ({ title, onClose, children, defaultPosition, width = 400, height
           <div className="window-controls">
             <div className="window-btn btn-min"></div>
             <div className="window-btn btn-max"></div>
-            <div className="window-btn btn-close" onClick={onClose}></div>
+            <div className="window-btn btn-close" onClick={onClose} onMouseDown={(e) => e.stopPropagation()}></div>
           </div>
         </div>
         <div className="window-content" onMouseDown={(e) => e.stopPropagation()}>
@@ -87,26 +87,160 @@ const Window = ({ title, onClose, children, defaultPosition, width = 400, height
 };
 
 // Apps content
-const TerminalApp = () => (
-  <div style={{ background: '#111', color: '#33ff00', height: '100%', padding: '8px', margin: '-12px', fontFamily: '"VT323", monospace', fontSize: '20px' }}>
-    <p>Welcome to Retrium OS Terminal</p>
-    <p>[INFO] Type "help" for the full command list.</p>
-    <p style={{ color: '#ff3366' }}>dash@retrium-os:~$ <span className="animate-pulse">_</span></p>
-  </div>
-);
+const TerminalApp = () => {
+  const [history, setHistory] = useState([
+    { type: 'output', text: 'Welcome to Retrium OS Terminal' },
+    { type: 'output', text: '[INFO] Type "help" for the full command list.' }
+  ]);
+  const [input, setInput] = useState('');
+  const endRef = useRef(null);
 
-const CalculatorApp = () => (
-  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', height: '100%' }}>
-    <div style={{ background: '#fff', border: '2px solid #000', padding: '8px', textAlign: 'right', fontSize: '24px' }}>0</div>
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '4px', flex: 1 }}>
-      {['7','8','9','/','4','5','6','*','1','2','3','-','0','.','=','+'].map(btn => (
-        <button key={btn} style={{ background: '#e0e0e0', border: '2px solid #000', fontFamily: 'Pixelify Sans', fontSize: '20px', cursor: 'pointer', boxShadow: '2px 2px 0px #000' }}>
-          {btn}
-        </button>
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [history]);
+
+  const handleCommand = (e) => {
+    if (e.key === 'Enter') {
+      const cmd = input.trim();
+      if (!cmd) return;
+      
+      const newHistory = [...history, { type: 'input', text: `dash@retrium-os:~$ ${cmd}` }];
+      
+      const parts = cmd.toLowerCase().split(' ');
+      const baseCmd = parts[0];
+
+      if (baseCmd === 'help') {
+        newHistory.push({ type: 'output', text: 'Available commands: help, clear, echo, date, whoami' });
+      } else if (baseCmd === 'clear') {
+        setHistory([]);
+        setInput('');
+        return;
+      } else if (baseCmd === 'echo') {
+        newHistory.push({ type: 'output', text: parts.slice(1).join(' ') });
+      } else if (baseCmd === 'date') {
+        newHistory.push({ type: 'output', text: new Date().toString() });
+      } else if (baseCmd === 'whoami') {
+        newHistory.push({ type: 'output', text: 'dash' });
+      } else {
+        newHistory.push({ type: 'output', text: `Command not found: ${baseCmd}` });
+      }
+      
+      setHistory(newHistory);
+      setInput('');
+    }
+  };
+
+  return (
+    <div style={{ background: '#111', color: '#33ff00', height: '100%', padding: '12px', margin: '-12px', fontFamily: '"VT323", monospace', fontSize: '20px', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+      {history.map((line, i) => (
+        <p key={i} style={{ margin: '0 0 6px 0', color: line.type === 'input' ? '#fff' : (line.text.startsWith('[INFO]') ? '#aaa' : '#33ff00') }}>
+          {line.text}
+        </p>
       ))}
+      <div style={{ display: 'flex', alignItems: 'center', color: '#ff3366', marginTop: '4px' }}>
+        <span style={{ marginRight: '8px', whiteSpace: 'nowrap' }}>dash@retrium-os:~$</span>
+        <input 
+          type="text" 
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleCommand}
+          autoFocus
+          style={{ background: 'transparent', border: 'none', color: '#fff', outline: 'none', fontFamily: '"VT323", monospace', fontSize: '20px', flex: 1, textShadow: 'none' }}
+        />
+      </div>
+      <div ref={endRef} />
     </div>
-  </div>
-);
+  );
+};
+
+const CalculatorApp = () => {
+  const [display, setDisplay] = useState('0');
+  const [prevVal, setPrevVal] = useState(null);
+  const [operator, setOperator] = useState(null);
+  const [waitingForNewValue, setWaitingForNewValue] = useState(false);
+
+  const calculate = (a, b, op) => {
+    a = parseFloat(a); b = parseFloat(b);
+    if (op === '+') return a + b;
+    if (op === '-') return a - b;
+    if (op === '*') return a * b;
+    if (op === '/') return a / b;
+    return b;
+  };
+
+  const handlePress = (val) => {
+    if (val === 'C') {
+      setDisplay('0');
+      setPrevVal(null);
+      setOperator(null);
+      setWaitingForNewValue(false);
+      return;
+    }
+    
+    if (['+', '-', '*', '/'].includes(val)) {
+      if (operator && !waitingForNewValue) {
+        const result = calculate(prevVal, display, operator);
+        setDisplay(String(result));
+        setPrevVal(String(result));
+      } else {
+        setPrevVal(display);
+      }
+      setOperator(val);
+      setWaitingForNewValue(true);
+      return;
+    }
+
+    if (val === '=') {
+      if (operator && prevVal) {
+        const result = calculate(prevVal, display, operator);
+        setDisplay(String(result));
+        setPrevVal(null);
+        setOperator(null);
+        setWaitingForNewValue(true);
+      }
+      return;
+    }
+
+    // Number or dot
+    if (waitingForNewValue) {
+      setDisplay(val);
+      setWaitingForNewValue(false);
+    } else {
+      setDisplay(display === '0' ? val : display + val);
+    }
+  };
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', height: '100%' }}>
+      <div style={{ background: '#fff', border: '2px solid #000', padding: '8px', textAlign: 'right', fontSize: '28px', overflow: 'hidden', textOverflow: 'ellipsis', fontFamily: '"VT323", monospace' }}>
+        {display}
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px', flex: 1 }}>
+        {['7','8','9','/','4','5','6','*','1','2','3','-','C','0','=','+'].map(btn => (
+          <button 
+            key={btn} 
+            onClick={() => handlePress(btn)}
+            style={{ 
+              background: ['=','+','-','*','/','C'].includes(btn) ? '#ffbd2e' : '#e0e0e0', 
+              border: '2px solid #000', 
+              fontFamily: 'Pixelify Sans', 
+              fontSize: '22px', 
+              fontWeight: 'bold',
+              cursor: 'pointer', 
+              boxShadow: '2px 2px 0px #000',
+              transition: 'transform 0.1s, box-shadow 0.1s'
+            }}
+            onMouseDown={(e) => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'translate(2px, 2px)'; }}
+            onMouseUp={(e) => { e.currentTarget.style.boxShadow = '2px 2px 0px #000'; e.currentTarget.style.transform = 'none'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.boxShadow = '2px 2px 0px #000'; e.currentTarget.style.transform = 'none'; }}
+          >
+            {btn}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const TrashApp = () => (
   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
@@ -117,25 +251,55 @@ const TrashApp = () => (
   </div>
 );
 
-const MusicPlayerApp = () => (
-  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: '16px' }}>
-    <div style={{ width: '120px', height: '120px', borderRadius: '50%', background: '#111', border: '4px solid #333', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 20px rgba(0,0,0,0.5)' }}>
-      <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: '#4caf50', border: '2px solid #111' }}></div>
+const MusicPlayerApp = () => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: '20px' }}>
+      <div style={{ 
+        width: '120px', height: '120px', borderRadius: '50%', background: '#111', 
+        border: '4px solid #333', display: 'flex', alignItems: 'center', justifyContent: 'center', 
+        boxShadow: '0 0 20px rgba(0,0,0,0.5)',
+        animation: isPlaying ? 'spin 4s linear infinite' : 'none'
+      }}>
+        <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: '#4caf50', border: '2px solid #111' }}></div>
+      </div>
+      <div style={{ textAlign: 'center' }}>
+        <h2 style={{ fontSize: '28px', margin: '0' }}>GREEN</h2>
+        <p style={{ fontSize: '16px', color: '#666' }}>Pixel Records. Stereo audio.</p>
+      </div>
+      <button 
+        onClick={() => setIsPlaying(!isPlaying)}
+        style={{ 
+          background: isPlaying ? '#ff5f56' : '#27c93f', 
+          color: '#fff',
+          border: '2px solid #000', 
+          padding: '8px 24px', 
+          fontFamily: 'Pixelify Sans', 
+          fontSize: '18px', 
+          cursor: 'pointer', 
+          boxShadow: '2px 2px 0px #000',
+          transition: 'transform 0.1s, box-shadow 0.1s'
+        }}
+        onMouseDown={(e) => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'translate(2px, 2px)'; }}
+        onMouseUp={(e) => { e.currentTarget.style.boxShadow = '2px 2px 0px #000'; e.currentTarget.style.transform = 'none'; }}
+        onMouseLeave={(e) => { e.currentTarget.style.boxShadow = '2px 2px 0px #000'; e.currentTarget.style.transform = 'none'; }}
+      >
+        {isPlaying ? 'Pause' : 'Play'}
+      </button>
+      <style>{`
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+      `}</style>
     </div>
-    <div style={{ textAlign: 'center' }}>
-      <h2 style={{ fontSize: '24px', margin: '0' }}>GREEN</h2>
-      <p style={{ fontSize: '16px', color: '#666' }}>Pixel Records. Stereo audio.</p>
-    </div>
-    <button style={{ background: '#e0e0e0', border: '2px solid #000', padding: '4px 16px', fontFamily: 'Pixelify Sans', fontSize: '18px', cursor: 'pointer', boxShadow: '2px 2px 0px #000' }}>Play</button>
-  </div>
-);
+  );
+};
 
 function App() {
   const [apps, setApps] = useState([
-    { id: 'Terminal', title: 'Terminal', isOpen: true, zIndex: 1, position: { x: 50, y: 50 } },
-    { id: 'Calculator', title: 'Calculator', isOpen: true, zIndex: 2, position: { x: 300, y: 100 }, width: 250, height: 350 },
+    { id: 'Terminal', title: 'Terminal', isOpen: true, zIndex: 1, position: { x: 50, y: 50 }, width: 450, height: 320 },
+    { id: 'Calculator', title: 'Calculator', isOpen: true, zIndex: 2, position: { x: 300, y: 100 }, width: 280, height: 380 },
     { id: 'Trash', title: 'Trash', isOpen: true, zIndex: 3, position: { x: 150, y: 250 }, width: 400, height: 250 },
-    { id: 'Music', title: 'Music Player', isOpen: true, zIndex: 4, position: { x: 500, y: 150 }, width: 300, height: 400 }
+    { id: 'Music', title: 'Music Player', isOpen: true, zIndex: 4, position: { x: 550, y: 150 }, width: 320, height: 420 }
   ]);
   
   const [activeZIndex, setActiveZIndex] = useState(10);
@@ -147,7 +311,9 @@ function App() {
           setActiveZIndex(prev => prev + 1);
           return { ...app, isOpen: true, zIndex: activeZIndex + 1 };
         }
-        return app; // Do not close on dock click, just focus maybe
+        // If it is open and we click dock, bring to front
+        setActiveZIndex(prev => prev + 1);
+        return { ...app, zIndex: activeZIndex + 1 };
       }
       return app;
     }));
