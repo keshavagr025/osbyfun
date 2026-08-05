@@ -1,11 +1,11 @@
 :root {
-  --glass-bg: rgba(255, 255, 255, 0.15);
-  --glass-border: rgba(255, 255, 255, 0.3);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-  --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --accent-color: #3b82f6;
-  --menu-bg: rgba(20, 20, 20, 0.6);
+  --glass-bg: rgba(255, 255, 255, 0.2);
+  --glass-border: rgba(255, 255, 255, 0.4);
+  --glass-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
+  --text-primary: #000;
+  --text-light: #fff;
+  --retro-window-bg: #fdfdfd;
+  --retro-border: #111;
 }
 
 * {
@@ -16,7 +16,8 @@
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  /* Use pixel font as default */
+  font-family: 'Pixelify Sans', sans-serif;
   overflow: hidden;
   background: url('/wallpaper.png') no-repeat center center fixed;
   background-size: cover;
@@ -32,7 +33,7 @@ body {
   flex-direction: column;
 }
 
-/* Glassmorphism Utilities */
+/* Glassmorphism for dock only */
 .glass {
   background: var(--glass-bg);
   backdrop-filter: blur(12px);
@@ -48,16 +49,17 @@ body {
 
 /* --- TopBar Styles --- */
 .top-bar {
-  height: 28px;
+  height: 32px;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
-  background: var(--menu-bg);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  font-size: 0.85rem;
+  /* Retro TopBar: solid light blue with dark text, or transparent gradient */
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(5px);
+  border-bottom: 2px solid var(--retro-border);
+  font-size: 1.1rem;
   font-weight: 500;
   z-index: 9999;
 }
@@ -76,15 +78,16 @@ body {
 }
 
 .menu-item:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .logo-icon {
-  font-size: 18px;
+  font-size: 20px;
+  color: #000;
 }
 
 .top-bar-right .material-symbols-outlined {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
 }
 
 /* --- Dock Styles --- */
@@ -96,8 +99,9 @@ body {
   display: flex;
   gap: 12px;
   padding: 12px;
-  border-radius: 24px;
+  border-radius: 20px;
   animation: slideUp 0.5s ease-out;
+  z-index: 9999;
 }
 
 .dock-icon-container {
@@ -111,49 +115,52 @@ body {
 }
 
 .dock-icon-container:hover {
-  transform: scale(1.25) translateY(-8px);
+  transform: scale(1.15) translateY(-8px);
 }
 
 .dock-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 16px;
+  width: 54px;
+  height: 54px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.5);
   transition: all 0.2s;
+  border: 2px solid rgba(0,0,0,0.1);
 }
 
 .dock-icon.active {
-  background: rgba(255, 255, 255, 0.3);
-  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.8);
+  border-color: #000;
+  box-shadow: 0 4px 0 #000;
 }
 
 .dock-icon .material-symbols-outlined {
-  font-size: 28px;
+  font-size: 32px;
+  color: #333;
 }
 
 .dock-icon-indicator {
   position: absolute;
   bottom: -8px;
-  width: 4px;
-  height: 4px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background-color: white;
-  opacity: 0.8;
+  background-color: #000;
 }
 
 .dock-tooltip {
   position: absolute;
   top: -40px;
   opacity: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: #000;
   color: white;
-  font-size: 12px;
+  font-size: 14px;
+  font-family: 'VT323', monospace;
   padding: 4px 8px;
-  border-radius: 4px;
-  backdrop-filter: blur(4px);
+  border-radius: 0;
+  border: 2px solid #fff;
   pointer-events: none;
   white-space: nowrap;
   transition: opacity 0.2s;
@@ -172,9 +179,10 @@ body {
   padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
   flex-wrap: wrap;
   align-content: flex-start;
+  z-index: 1;
 }
 
 .desktop-icon-container {
@@ -183,7 +191,7 @@ body {
   align-items: center;
   justify-content: center;
   width: 80px;
-  gap: 4px;
+  gap: 8px;
   padding: 8px;
   border-radius: 8px;
   cursor: pointer;
@@ -191,32 +199,106 @@ body {
 }
 
 .desktop-icon-container:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .desktop-icon {
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(59, 130, 246, 0.8); /* Blue accent */
-  border-radius: 8px;
-  color: white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: #e0e0e0;
+  border: 3px solid #000;
+  border-radius: 4px;
+  color: #000;
+  box-shadow: 2px 2px 0px #000;
 }
 
 .desktop-icon .material-symbols-outlined {
-  font-size: 28px;
+  font-size: 32px;
 }
 
 .desktop-icon-label {
   color: white;
-  font-size: 12px;
+  font-size: 16px;
   text-align: center;
   font-weight: 500;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  text-shadow: 2px 2px 0px #000; /* Retro shadow */
+}
+
+/* --- Retro Window Styles --- */
+.retro-window {
+  position: absolute;
+  background: var(--retro-window-bg);
+  border: 3px solid var(--retro-border);
+  box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.window-header {
+  background: #222;
+  color: white;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'Pixelify Sans', sans-serif;
+  font-size: 16px;
+  letter-spacing: 1px;
+  cursor: grab;
+  border-bottom: 3px solid var(--retro-border);
+}
+
+.window-header:active {
+  cursor: grabbing;
+}
+
+.window-controls {
+  display: flex;
+  gap: 6px;
+}
+
+.window-btn {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid #000;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-close { background: #ff5f56; }
+.btn-min { background: #ffbd2e; }
+.btn-max { background: #27c93f; }
+
+.window-btn::after {
+  content: '';
+  display: block;
+  font-size: 10px;
+  font-weight: bold;
+  color: #000;
+  opacity: 0;
+}
+
+.window-btn:hover::after {
+  opacity: 1;
+}
+.btn-close:hover::after { content: '×'; }
+.btn-min:hover::after { content: '-'; }
+.btn-max:hover::after { content: '+'; }
+
+.window-content {
+  flex: 1;
+  padding: 12px;
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  background: #fff;
+  overflow: auto;
 }
 
 /* Animations */
