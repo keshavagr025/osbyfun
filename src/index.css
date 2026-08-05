@@ -18,7 +18,7 @@
 body {
   font-family: 'Pixelify Sans', sans-serif;
   overflow: hidden;
-  background: url('/wallpaper.png') no-repeat center center fixed;
+  background: url('/image.png') no-repeat center center fixed;
   background-size: cover;
   color: var(--text-primary);
   height: 100vh;
@@ -63,7 +63,7 @@ body {
 
 .boot-logo {
   font-size: 80px !important;
-  color: #3b82f6; 
+  color: #3b82f6;
   text-shadow: 2px 2px 0px #1e3a8a;
   margin-bottom: 40px;
 }
@@ -146,7 +146,7 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
-  background: rgba(255,255,255,0.7);
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(5px);
   border-bottom: 2px solid var(--retro-border);
   font-size: 1.1rem;
@@ -154,7 +154,8 @@ body {
   z-index: 9999;
 }
 
-.top-bar-left, .top-bar-right {
+.top-bar-left,
+.top-bar-right {
   display: flex;
   align-items: center;
   gap: 16px;
@@ -217,7 +218,7 @@ body {
   justify-content: center;
   background: rgba(255, 255, 255, 0.5);
   transition: all 0.2s;
-  border: 2px solid rgba(0,0,0,0.1);
+  border: 2px solid rgba(0, 0, 0, 0.1);
 }
 
 .dock-icon.active {
@@ -362,9 +363,17 @@ body {
   justify-content: center;
 }
 
-.btn-close { background: #ff5f56; }
-.btn-min { background: #ffbd2e; }
-.btn-max { background: #27c93f; }
+.btn-close {
+  background: #ff5f56;
+}
+
+.btn-min {
+  background: #ffbd2e;
+}
+
+.btn-max {
+  background: #27c93f;
+}
 
 .window-btn::after {
   content: '';
@@ -378,9 +387,18 @@ body {
 .window-btn:hover::after {
   opacity: 1;
 }
-.btn-close:hover::after { content: '×'; }
-.btn-min:hover::after { content: '-'; }
-.btn-max:hover::after { content: '+'; }
+
+.btn-close:hover::after {
+  content: '×';
+}
+
+.btn-min:hover::after {
+  content: '-';
+}
+
+.btn-max:hover::after {
+  content: '+';
+}
 
 .window-content {
   flex: 1;
@@ -392,6 +410,13 @@ body {
 }
 
 @keyframes slideUp {
-  0% { transform: translate(-50%, 20px); opacity: 0; }
-  100% { transform: translate(-50%, 0); opacity: 1; }
+  0% {
+    transform: translate(-50%, 20px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
 }
