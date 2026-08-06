@@ -11,7 +11,7 @@ const BootScreen = ({ onComplete }) => {
           setTimeout(onComplete, 800); // Wait a bit at 100% before closing
           return 100;
         }
-        return Math.min(100, p + Math.floor(Math.random() * 8) + 2); 
+        return Math.min(100, p + Math.floor(Math.random() * 8) + 2);
       });
     }, 150);
     return () => clearInterval(interval);
@@ -28,12 +28,12 @@ const BootScreen = ({ onComplete }) => {
       <div className="boot-logo-container">
         <span className="material-symbols-outlined boot-logo">cruelty_free</span>
       </div>
-      
+
       <div className="boot-text-container">
         <p className="boot-title">SYSTEM NOTICE</p>
-        <p className="boot-desc">Retrium OS has sound. Headphones recommended.</p>
-        <p className="boot-desc" style={{ marginTop: '16px' }}>Fullscreen puts the browser away<br/>and leaves only the desktop.</p>
-        
+        <p className="boot-desc">rabbit OS has sound. Headphones recommended.</p>
+        <p className="boot-desc" style={{ marginTop: '16px' }}>Fullscreen puts the browser away<br />and leaves only the desktop.</p>
+
         <button className="boot-fullscreen-btn" onClick={enterFullscreen}>
           Enter Fullscreen
         </button>
@@ -45,7 +45,7 @@ const BootScreen = ({ onComplete }) => {
           <div className="boot-progress-bar-fill" style={{ width: `${progress}%` }}></div>
         </div>
         <p className="boot-progress-text">{progress}%</p>
-        <p className="boot-loading-text">Starting Retrium OS...</p>
+        <p className="boot-loading-text">Starting rabbit OS...</p>
       </div>
     </div>
   );
