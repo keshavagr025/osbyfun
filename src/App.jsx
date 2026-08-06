@@ -102,6 +102,8 @@ const Dock = ({ toggleApp }) => {
       <DockIcon icon="folder" label="Files" isActive={false} onClick={() => toggleApp('Trash')} />
       <DockIcon icon="queue_music" label="Music Player" isActive={false} onClick={() => toggleApp('Music')} />
       <DockIcon icon="calculate" label="Calculator" isActive={false} onClick={() => toggleApp('Calculator')} />
+      <DockIcon icon="grid_on" label="Minesweeper" isActive={false} onClick={() => toggleApp('Minesweeper')} />
+      <DockIcon icon="extension" label="Memory" isActive={false} onClick={() => toggleApp('Memory')} />
     </div>
   );
 };
@@ -345,13 +347,183 @@ const MusicPlayerApp = () => {
   );
 };
 
+const MinesweeperApp = () => {
+  const [grid, setGrid] = useState([]);
+  const [gameOver, setGameOver] = useState(false);
+  const [win, setWin] = useState(false);
+  const rows = 8, cols = 8, minesCount = 10;
+
+  const initGame = () => {
+    let newGrid = Array(rows).fill().map(() => Array(cols).fill({ isMine: false, isRevealed: false, isFlagged: false, neighborMines: 0 }));
+    let placed = 0;
+    while(placed < minesCount) {
+      let r = Math.floor(Math.random() * rows);
+      let c = Math.floor(Math.random() * cols);
+      if(!newGrid[r][c].isMine) {
+        newGrid[r][c] = { ...newGrid[r][c], isMine: true };
+        placed++;
+      }
+    }
+    for(let r=0; r<rows; r++) {
+      for(let c=0; c<cols; c++) {
+        if(!newGrid[r][c].isMine) {
+          let count = 0;
+          for(let i=-1; i<=1; i++) {
+            for(let j=-1; j<=1; j++) {
+              if(r+i>=0 && r+i<rows && c+j>=0 && c+j<cols && newGrid[r+i][c+j].isMine) count++;
+            }
+          }
+          newGrid[r][c] = { ...newGrid[r][c], neighborMines: count };
+        }
+      }
+    }
+    setGrid(newGrid);
+    setGameOver(false);
+    setWin(false);
+  };
+
+  useEffect(() => { initGame(); }, []);
+
+  const reveal = (r, c) => {
+    if(gameOver || win || grid[r][c].isRevealed || grid[r][c].isFlagged) return;
+    let newGrid = [...grid.map(row => [...row.map(cell => ({...cell}))])];
+    
+    if(newGrid[r][c].isMine) {
+      newGrid[r][c].isRevealed = true;
+      setGrid(newGrid);
+      setGameOver(true);
+      return;
+    }
+
+    const floodFill = (row, col) => {
+      if(row<0 || row>=rows || col<0 || col>=cols || newGrid[row][col].isRevealed || newGrid[row][col].isFlagged) return;
+      newGrid[row][col].isRevealed = true;
+      if(newGrid[row][col].neighborMines === 0) {
+        for(let i=-1; i<=1; i++) {
+          for(let j=-1; j<=1; j++) floodFill(row+i, col+j);
+        }
+      }
+    };
+    floodFill(r, c);
+    
+    let unrevealedSafe = 0;
+    newGrid.forEach(row => row.forEach(cell => {
+      if(!cell.isMine && !cell.isRevealed) unrevealedSafe++;
+    }));
+    
+    setGrid(newGrid);
+    if(unrevealedSafe === 0) setWin(true);
+  };
+
+  const toggleFlag = (e, r, c) => {
+    e.preventDefault();
+    if(gameOver || win || grid[r][c].isRevealed) return;
+    let newGrid = [...grid.map(row => [...row.map(cell => ({...cell}))])];
+    newGrid[r][c].isFlagged = !newGrid[r][c].isFlagged;
+    setGrid(newGrid);
+  };
+
+  return (
+    <div className="minesweeper-app">
+      <div className="minesweeper-header">
+        <div className="minesweeper-score">{minesCount}</div>
+        <button className="minesweeper-face retro-btn" onClick={initGame}>{gameOver ? '😵' : (win ? '😎' : '🙂')}</button>
+        <div className="minesweeper-time">000</div>
+      </div>
+      <div className="minesweeper-grid">
+        {grid.map((row, r) => row.map((cell, c) => (
+          <div 
+            key={`${r}-${c}`} 
+            className={`minesweeper-cell ${cell.isRevealed ? 'revealed' : ''} ${cell.isMine && cell.isRevealed ? 'mine' : ''} ${gameOver && cell.isMine && !cell.isRevealed ? 'revealed mine' : ''}`}
+            onClick={() => reveal(r, c)}
+            onContextMenu={(e) => toggleFlag(e, r, c)}
+            data-neighbors={cell.neighborMines}
+          >
+            {cell.isRevealed && !cell.isMine && cell.neighborMines > 0 ? cell.neighborMines : ''}
+            {(cell.isRevealed || (gameOver && cell.isMine)) && cell.isMine ? '💣' : ''}
+            {!cell.isRevealed && cell.isFlagged ? '🚩' : ''}
+          </div>
+        )))}
+      </div>
+    </div>
+  );
+};
+
+const MemoryApp = () => {
+  const [cards, setCards] = useState([]);
+  const [flipped, setFlipped] = useState([]);
+  const [solved, setSolved] = useState([]);
+  const [disabled, setDisabled] = useState(false);
+
+  const emojis = ['🚀','👾','🕹️','💾','🤖','🔋','📺','💻'];
+  
+  const initGame = () => {
+    const shuffled = [...emojis, ...emojis]
+      .sort(() => Math.random() - 0.5)
+      .map((id, index) => ({ id: index, emoji: id }));
+    setCards(shuffled);
+    setFlipped([]);
+    setSolved([]);
+    setDisabled(false);
+  };
+
+  useEffect(() => { initGame(); }, []);
+
+  const handleClick = (index) => {
+    if(disabled || flipped.includes(index) || solved.includes(index)) return;
+    const newFlipped = [...flipped, index];
+    setFlipped(newFlipped);
+    if(newFlipped.length === 2) {
+      setDisabled(true);
+      if(cards[newFlipped[0]].emoji === cards[newFlipped[1]].emoji) {
+        setSolved([...solved, ...newFlipped]);
+        setFlipped([]);
+        setDisabled(false);
+      } else {
+        setTimeout(() => {
+          setFlipped([]);
+          setDisabled(false);
+        }, 1000);
+      }
+    }
+  };
+
+  return (
+    <div className="memory-app">
+      <div className="memory-header">
+        <span style={{fontFamily: '"VT323", monospace', fontSize: '20px'}}>Pairs: {solved.length / 2} / 8</span>
+        <button className="retro-btn" onClick={initGame}>Restart</button>
+      </div>
+      <div className="memory-grid">
+        {cards.map((card, i) => (
+          <div 
+            key={i} 
+            className={`memory-card ${flipped.includes(i) || solved.includes(i) ? 'flipped' : ''}`}
+            onClick={() => handleClick(i)}
+          >
+            <div className="memory-card-inner">
+              <div className="memory-card-front">?</div>
+              <div className="memory-card-back">{card.emoji}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      {solved.length === 16 && (
+        <div className="memory-win">YOU WIN!</div>
+      )}
+    </div>
+  );
+};
+
 function App() {
   const [isBooting, setIsBooting] = useState(true);
   const [apps, setApps] = useState([
     { id: 'Terminal', title: 'Terminal', isOpen: false, zIndex: 1, position: { x: 50, y: 50 }, width: 450, height: 320 },
     { id: 'Calculator', title: 'Calculator', isOpen: false, zIndex: 2, position: { x: 300, y: 100 }, width: 280, height: 380 },
     { id: 'Trash', title: 'Trash', isOpen: false, zIndex: 3, position: { x: 150, y: 250 }, width: 400, height: 250 },
-    { id: 'Music', title: 'Music Player', isOpen: false, zIndex: 4, position: { x: 550, y: 150 }, width: 320, height: 420 }
+    { id: 'Music', title: 'Music Player', isOpen: false, zIndex: 4, position: { x: 550, y: 150 }, width: 320, height: 420 },
+    { id: 'Minesweeper', title: 'Minesweeper', isOpen: false, zIndex: 5, position: { x: 200, y: 80 }, width: 310, height: 400 },
+    { id: 'Memory', title: 'Memory Match', isOpen: false, zIndex: 6, position: { x: 400, y: 120 }, width: 360, height: 460 }
   ]);
   
   const [activeZIndex, setActiveZIndex] = useState(10);
@@ -389,6 +561,8 @@ function App() {
       <div className="desktop">
         <DesktopIcon icon="description" label="Readme.txt" onClick={() => toggleApp('Terminal')} />
         <DesktopIcon icon="calculate" label="Calculator" onClick={() => toggleApp('Calculator')} />
+        <DesktopIcon icon="grid_on" label="Minesweeper" onClick={() => toggleApp('Minesweeper')} />
+        <DesktopIcon icon="extension" label="Memory" onClick={() => toggleApp('Memory')} />
         <DesktopIcon icon="delete" label="Trash" onClick={() => toggleApp('Trash')} />
       </div>
 
@@ -408,6 +582,8 @@ function App() {
           {app.id === 'Calculator' && <CalculatorApp />}
           {app.id === 'Trash' && <TrashApp />}
           {app.id === 'Music' && <MusicPlayerApp />}
+          {app.id === 'Minesweeper' && <MinesweeperApp />}
+          {app.id === 'Memory' && <MemoryApp />}
         </Window>
       ))}
 
