@@ -13,6 +13,7 @@ import TrashApp from './components/apps/TrashApp';
 import MusicPlayerApp from './components/apps/MusicPlayerApp';
 import MinesweeperApp from './components/apps/MinesweeperApp';
 import MemoryApp from './components/apps/MemoryApp';
+import CommunityApp from './components/apps/CommunityApp';
 
 function App() {
   const [isBooting, setIsBooting] = useState(true);
@@ -22,7 +23,8 @@ function App() {
     { id: 'Trash', title: 'Trash', isOpen: false, zIndex: 3, position: { x: 150, y: 250 }, width: 400, height: 250 },
     { id: 'Music', title: 'Music Player', isOpen: false, zIndex: 4, position: { x: 550, y: 150 }, width: 320, height: 420 },
     { id: 'Minesweeper', title: 'Minesweeper', isOpen: false, zIndex: 5, position: { x: 200, y: 80 }, width: 310, height: 400 },
-    { id: 'Memory', title: 'Memory Match', isOpen: false, zIndex: 6, position: { x: 400, y: 120 }, width: 360, height: 460 }
+    { id: 'Memory', title: 'Memory Match', isOpen: false, zIndex: 6, position: { x: 400, y: 120 }, width: 360, height: 460 },
+    { id: 'Community', title: 'Community', isOpen: false, zIndex: 7, position: { x: 100, y: 50 }, width: 850, height: 500 }
   ]);
   
   const [activeZIndex, setActiveZIndex] = useState(10);
@@ -63,6 +65,7 @@ function App() {
         <DesktopIcon icon="grid_on" label="Minesweeper" onClick={() => toggleApp('Minesweeper')} />
         <DesktopIcon icon="extension" label="Memory" onClick={() => toggleApp('Memory')} />
         <DesktopIcon icon="delete" label="Trash" onClick={() => toggleApp('Trash')} />
+        <DesktopIcon icon="forum" label="Community" onClick={() => toggleApp('Community')} />
       </div>
 
       {/* Render open windows */}
@@ -83,6 +86,7 @@ function App() {
           {app.id === 'Music' && <MusicPlayerApp />}
           {app.id === 'Minesweeper' && <MinesweeperApp />}
           {app.id === 'Memory' && <MemoryApp />}
+          {app.id === 'Community' && <CommunityApp />}
         </Window>
       ))}
 
