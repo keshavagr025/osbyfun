@@ -1,4 +1,18 @@
 import React, { useState, useEffect } from 'react';
+// import { createClient } from '@supabase/supabase-js';
+
+// =========================================================================
+// BACKEND CONFIGURATION
+// To enable Real-Time Supabase backend:
+// 1. Run: npm install @supabase/supabase-js
+// 2. Uncomment the import above and the Supabase config below.
+// 3. Set USE_SUPABASE to true.
+// =========================================================================
+const USE_SUPABASE = false; 
+
+// const supabaseUrl = 'YOUR_SUPABASE_URL';
+// const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+// const supabase = createClient(supabaseUrl, supabaseKey);
 
 const initialMessages = [
   { id: 1, name: 'T.DEEPESH', text: 'It\'s so cool man 🙏🏻', date: 'Aug 6, 2026, 10:57 PM' },
@@ -12,21 +26,36 @@ const CommunityApp = () => {
   const [isPosting, setIsPosting] = useState(false);
   const [newMessage, setNewMessage] = useState({ name: '', text: '' });
 
-  // Load from local storage on mount (simulating backend fetch)
   useEffect(() => {
-    const saved = localStorage.getItem('retrium-community-messages');
-    if (saved) {
-      setMessages(JSON.parse(saved));
+    if (USE_SUPABASE) {
+      // FETCH from Supabase
+      /*
+      const fetchMessages = async () => {
+        const { data } = await supabase.from('community_feedback').select('*').order('created_at', { ascending: false });
+        if (data) setMessages(data);
+      };
+      fetchMessages();
+
+      // REAL-TIME Subscription
+      const subscription = supabase
+        .channel('public:community_feedback')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'community_feedback' }, payload => {
+          setMessages(prev => [payload.new, ...prev]);
+        })
+        .subscribe();
+
+      return () => { supabase.removeChannel(subscription); };
+      */
+    } else {
+      // Local Storage Mock Backend
+      const saved = localStorage.getItem('retrium-community-messages');
+      if (saved) {
+        setMessages(JSON.parse(saved));
+      }
     }
   }, []);
 
-  // Save to local storage (simulating backend store)
-  const saveMessageToBackend = (newMsgList) => {
-    localStorage.setItem('retrium-community-messages', JSON.stringify(newMsgList));
-    // TODO: Replace with actual backend fetch/post (e.g. Supabase, Firebase) later
-  };
-
-  const handlePost = (e) => {
+  const handlePost = async (e) => {
     e.preventDefault();
     if (!newMessage.name.trim() || !newMessage.text.trim()) return;
 
@@ -41,9 +70,22 @@ const CommunityApp = () => {
       date: formattedDate
     };
 
-    const updatedMessages = [newMsg, ...messages];
-    setMessages(updatedMessages);
-    saveMessageToBackend(updatedMessages);
+    if (USE_SUPABASE) {
+      // Insert to Supabase
+      /*
+      const { error } = await supabase.from('community_feedback').insert([{ 
+        name: newMsg.name, 
+        text: newMsg.text, 
+        date: newMsg.date 
+      }]);
+      if (error) console.error("Error posting message:", error);
+      */
+    } else {
+      // Local Storage Update
+      const updatedMessages = [newMsg, ...messages];
+      setMessages(updatedMessages);
+      localStorage.setItem('retrium-community-messages', JSON.stringify(updatedMessages));
+    }
     
     setNewMessage({ name: '', text: '' });
     setIsPosting(false);
