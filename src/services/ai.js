@@ -9,12 +9,20 @@ export const chatWithDash = async (messageHistory, apiKey) => {
     return "Error: I need an API key to think! Set VITE_GEMINI_API_KEY in .env.local.";
   }
 
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
   const contents = messageHistory.map(msg => ({
     role: msg.role === 'assistant' ? 'model' : 'user',
     parts: [{ text: msg.text }]
   }));
+
+  // Gemini requires the first message in the conversation to be from the user.
+  if (contents.length > 0 && contents[0].role === 'model') {
+    contents.unshift({
+      role: 'user',
+      parts: [{ text: "(User booted up the computer)" }]
+    });
+  }
 
   try {
     const response = await fetch(endpoint, {
