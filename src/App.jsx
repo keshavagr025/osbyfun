@@ -14,6 +14,7 @@ import MusicPlayerApp from './components/apps/MusicPlayerApp';
 import MinesweeperApp from './components/apps/MinesweeperApp';
 import MemoryApp from './components/apps/MemoryApp';
 import CommunityApp from './components/apps/CommunityApp';
+import ChatBox from './components/ChatBox';
 
 function App() {
   const [isBooting, setIsBooting] = useState(true);
@@ -28,15 +29,24 @@ function App() {
   ]);
   
   const [activeZIndex, setActiveZIndex] = useState(10);
+  const [chatMessage, setChatMessage] = useState(null);
 
   if (isBooting) {
-    return <BootScreen onComplete={() => setIsBooting(false)} />;
+    return <BootScreen onComplete={() => {
+      setIsBooting(false);
+      setTimeout(() => {
+        setChatMessage({ name: 'DASH', message: "it's been a long time since i used this computer" });
+      }, 1000);
+    }} />;
   }
 
   const toggleApp = (id) => {
     setApps(apps.map(app => {
       if (app.id === id) {
         if (!app.isOpen) {
+          if (id === 'Trash') {
+            setChatMessage({ name: 'DASH', message: 'i hated putting that in here' });
+          }
           setActiveZIndex(prev => prev + 1);
           return { ...app, isOpen: true, zIndex: activeZIndex + 1 };
         }
@@ -91,6 +101,14 @@ function App() {
       ))}
 
       <Dock toggleApp={toggleApp} />
+      
+      {chatMessage && (
+        <ChatBox 
+          name={chatMessage.name} 
+          message={chatMessage.message} 
+          onClose={() => setChatMessage(null)} 
+        />
+      )}
     </>
   );
 }
