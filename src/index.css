@@ -709,3 +709,32 @@ body {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(4px); }
 }
+
+.chat-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 2px dashed rgba(0,0,0,0.2);
+}
+
+.chat-prompt-arrow {
+  color: #ff5f56;
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.chat-reply-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  font-family: 'VT323', monospace;
+  font-size: 24px;
+  color: #000;
+  outline: none;
+}
+
+.chat-reply-input::placeholder {
+  color: rgba(0,0,0,0.4);
+}

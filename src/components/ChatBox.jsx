@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import heroImg from '../assets/hero.png';
+import { chatWithDash } from '../services/ai';
 
 const useTypingSound = () => {
   const audioCtxRef = useRef(null);
@@ -31,10 +32,16 @@ const useTypingSound = () => {
   return playBlip;
 };
 
-const ChatBox = ({ name, message, onClose }) => {
+const ChatBox = ({ name, message: initialMessage, onClose }) => {
+  const [history, setHistory] = useState([{ role: 'assistant', text: initialMessage }]);
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
+  const [inputText, setInputText] = useState('');
+  const [isWaiting, setIsWaiting] = useState(false);
+  
   const playBlip = useTypingSound();
+
+  const currentMessage = history[history.length - 1].text;
 
   useEffect(() => {
     setDisplayedText('');
@@ -42,10 +49,10 @@ const ChatBox = ({ name, message, onClose }) => {
     let i = 0;
 
     const interval = setInterval(() => {
-      if (i < message.length) {
-        setDisplayedText((prev) => prev + message.charAt(i));
+      if (i < currentMessage.length) {
+        setDisplayedText((prev) => prev + currentMessage.charAt(i));
         // Play sound for non-space characters
-        if (message.charAt(i) !== ' ' && i % 2 === 0) {
+        if (currentMessage.charAt(i) !== ' ' && i % 2 === 0) {
           playBlip();
         }
         i++;
@@ -56,14 +63,31 @@ const ChatBox = ({ name, message, onClose }) => {
     }, 40); // typing speed
 
     return () => clearInterval(interval);
-  }, [message, playBlip]);
+  }, [currentMessage, playBlip]);
 
   // If clicked while typing, skip to end
-  const handleClick = () => {
+  const handleClick = (e) => {
     if (isTyping) {
-      setDisplayedText(message);
+      setDisplayedText(currentMessage);
       setIsTyping(false);
     }
+  };
+
+  const handleSend = async () => {
+    if (!inputText.trim() || isWaiting || isTyping) return;
+    
+    const userText = inputText.trim();
+    setInputText('');
+    setIsWaiting(true);
+    
+    const newHistory = [...history, { role: 'user', text: userText }];
+    setHistory([...newHistory, { role: 'assistant', text: '...' }]);
+    
+    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+    const responseText = await chatWithDash(newHistory, apiKey);
+    
+    setHistory([...newHistory, { role: 'assistant', text: responseText }]);
+    setIsWaiting(false);
   };
 
   return (
@@ -77,7 +101,23 @@ const ChatBox = ({ name, message, onClose }) => {
         <div className="chat-text">
           {displayedText}
         </div>
-        {!isTyping && <div className="chat-arrow">▼</div>}
+        
+        {!isTyping && !isWaiting && (
+          <div className="chat-input-wrapper" onClick={e => e.stopPropagation()}>
+            <span className="chat-prompt-arrow">{'>'}</span>
+            <input 
+              type="text" 
+              className="chat-reply-input" 
+              value={inputText}
+              onChange={e => setInputText(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleSend()}
+              placeholder="Reply to Dash..."
+              autoFocus
+            />
+          </div>
+        )}
+        
+        {(!isTyping || isWaiting) && !inputText && <div className="chat-arrow">▼</div>}
       </div>
     </div>
   );
