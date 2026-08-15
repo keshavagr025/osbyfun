@@ -38,7 +38,7 @@ const ChatBox = ({ name, message: initialMessage, onClose }) => {
   const [isTyping, setIsTyping] = useState(true);
   const [inputText, setInputText] = useState('');
   const [isWaiting, setIsWaiting] = useState(false);
-  
+
   const playBlip = useTypingSound();
 
   const currentMessage = history[history.length - 1].text;
@@ -75,17 +75,17 @@ const ChatBox = ({ name, message: initialMessage, onClose }) => {
 
   const handleSend = async () => {
     if (!inputText.trim() || isWaiting || isTyping) return;
-    
+
     const userText = inputText.trim();
     setInputText('');
     setIsWaiting(true);
-    
+
     const newHistory = [...history, { role: 'user', text: userText }];
     setHistory([...newHistory, { role: 'assistant', text: '...' }]);
-    
+
     const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
     const responseText = await chatWithDash(newHistory, apiKey);
-    
+
     setHistory([...newHistory, { role: 'assistant', text: responseText }]);
     setIsWaiting(false);
   };
@@ -101,22 +101,22 @@ const ChatBox = ({ name, message: initialMessage, onClose }) => {
         <div className="chat-text">
           {displayedText}
         </div>
-        
+
         {!isTyping && !isWaiting && (
           <div className="chat-input-wrapper" onClick={e => e.stopPropagation()}>
             <span className="chat-prompt-arrow">{'>'}</span>
-            <input 
-              type="text" 
-              className="chat-reply-input" 
+            <input
+              type="text"
+              className="chat-reply-input"
               value={inputText}
               onChange={e => setInputText(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleSend()}
-              placeholder="Reply to Dash..."
+              placeholder="Reply to Enna..."
               autoFocus
             />
           </div>
         )}
-        
+
         {(!isTyping || isWaiting) && !inputText && <div className="chat-arrow">▼</div>}
       </div>
     </div>

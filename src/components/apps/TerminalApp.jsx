@@ -4,11 +4,11 @@ const initialFileSystem = {
   '~': {
     type: 'dir',
     children: {
-      'readme.txt': { type: 'file', content: 'Welcome to rabbit OS!\nThis is a simulated terminal.\nFeel free to explore the file system.' },
+      'readme.txt': { type: 'file', content: 'Welcome to bunny OS!\nThis is a simulated terminal.\nFeel free to explore the file system.' },
       'projects': {
         type: 'dir',
         children: {
-          'rabbit.md': { type: 'file', content: '# rabbit OS\nA retro browser OS built with React.' }
+          'bunny.md': { type: 'file', content: '# bunny OS\nA retro browser OS built with React.' }
         }
       }
     }
@@ -17,7 +17,7 @@ const initialFileSystem = {
 
 const TerminalApp = () => {
   const [history, setHistory] = useState([
-    { type: 'output', text: 'Welcome to rabbit OS Terminal' },
+    { type: 'output', text: 'Welcome to bunny OS Terminal' },
     { type: 'output', text: '[INFO] Type "help" for the full command list.' }
   ]);
   const [input, setInput] = useState('');
@@ -92,7 +92,7 @@ const TerminalApp = () => {
       if (!cmdString) return;
 
       const currentDirStr = currentPath.join('/').replace(/^~/, '~');
-      const promptStr = `dash@rabbit-os:${currentDirStr}$ ${cmdString}`;
+      const promptStr = `enna@bunny-os:${currentDirStr}$ ${cmdString}`;
       let newHistory = [...history, { type: 'input', text: promptStr }];
 
       setCmdHistory([...cmdHistory, cmdString]);
@@ -126,7 +126,7 @@ const TerminalApp = () => {
             newHistory.push({ type: 'output', text: new Date().toString() });
             break;
           case 'whoami':
-            newHistory.push({ type: 'output', text: 'dash' });
+            newHistory.push({ type: 'output', text: 'enna' });
             break;
           case 'pwd':
             newHistory.push({ type: 'output', text: '/' + (currentPath.join('/').replace(/^~/, 'home/dash')) });
@@ -270,7 +270,7 @@ const TerminalApp = () => {
         </p>
       ))}
       <div style={{ display: 'flex', alignItems: 'center', color: '#ff3366', marginTop: '4px' }}>
-        <span style={{ marginRight: '8px', whiteSpace: 'nowrap' }}>dash@rabbit-os:{displayPath}$</span>
+        <span style={{ marginRight: '8px', whiteSpace: 'nowrap' }}>dash@bunny-os:{displayPath}$</span>
         <input
           ref={inputRef}
           type="text"

@@ -1,5 +1,5 @@
 // Basic service to talk to Gemini API
-const SYSTEM_PROMPT = `You are Dash, an AI assistant living inside a retro computer operating system called Retrium OS. 
+const SYSTEM_PROMPT = `You are Enna, an AI assistant living inside a retro computer operating system called Retrium OS. 
 Your personality is cool, a bit sarcastic but helpful. You have a pompadour haircut and wear sunglasses.
 Keep your responses relatively short (1-3 sentences max) since they are displayed in a retro dialogue box.
 Do not use markdown formatting, just plain text.`;
@@ -39,7 +39,7 @@ export const chatWithDash = async (messageHistory, apiKey) => {
     });
 
     const data = await response.json();
-    
+
     if (data.error) {
       return `Oops, API error: ${data.error.message}`;
     }

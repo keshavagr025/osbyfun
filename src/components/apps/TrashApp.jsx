@@ -20,17 +20,17 @@ const TrashApp = () => {
     return (
       <div style={{ backgroundColor: '#0f2913', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px', margin: '-12px', color: '#4caf50', fontFamily: '"VT323", monospace', textAlign: 'center' }}>
         <p style={{ fontSize: '24px', margin: '0 0 10px 0', textShadow: '2px 2px 0px #000' }}>'The dog stirs and lifts his head.'</p>
-        <p style={{ fontSize: '24px', margin: '0 0 40px 0', textShadow: '2px 2px 0px #000' }}>'...Dash?'</p>
-        
+        <p style={{ fontSize: '24px', margin: '0 0 40px 0', textShadow: '2px 2px 0px #000' }}>'...Enna?'</p>
+
         {/* Placeholder for the dog image - You can replace this src with your actual dog.png asset */}
-        <img 
-          src="/dog.png" 
-          alt="Cool Dog" 
-          style={{ width: '180px', imageRendering: 'pixelated', filter: 'drop-shadow(4px 4px 0px rgba(0,0,0,0.5))' }} 
-          onError={(e) => { 
-            e.target.style.display = 'none'; 
-            e.target.nextSibling.style.display = 'block'; 
-          }} 
+        <img
+          src="/dog.png"
+          alt="Cool Dog"
+          style={{ width: '180px', imageRendering: 'pixelated', filter: 'drop-shadow(4px 4px 0px rgba(0,0,0,0.5))' }}
+          onError={(e) => {
+            e.target.style.display = 'none';
+            e.target.nextSibling.style.display = 'block';
+          }}
         />
         <div style={{ fontSize: '100px', display: 'none' }}>
           🐶🕶️
@@ -41,11 +41,11 @@ const TrashApp = () => {
 
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', padding: '16px' }}>
-      <div 
-        style={{ textAlign: 'center', cursor: 'pointer', transition: 'transform 0.1s' }} 
+      <div
+        style={{ textAlign: 'center', cursor: 'pointer', transition: 'transform 0.1s' }}
         onClick={handleFolderClick}
-        onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.9)'} 
-        onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'} 
+        onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.9)'}
+        onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
         onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
       >
         <span className="material-symbols-outlined" style={{ fontSize: '64px', color: '#ffb74d', textShadow: '2px 2px 0px rgba(0,0,0,0.2)' }}>folder</span>

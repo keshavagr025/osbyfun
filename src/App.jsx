@@ -27,7 +27,7 @@ function App() {
     { id: 'Memory', title: 'Memory Match', isOpen: false, zIndex: 6, position: { x: 400, y: 120 }, width: 360, height: 460 },
     { id: 'Community', title: 'Community', isOpen: false, zIndex: 7, position: { x: 100, y: 50 }, width: 850, height: 500 }
   ]);
-  
+
   const [activeZIndex, setActiveZIndex] = useState(10);
   const [chatMessage, setChatMessage] = useState(null);
 
@@ -35,7 +35,7 @@ function App() {
     return <BootScreen onComplete={() => {
       setIsBooting(false);
       setTimeout(() => {
-        setChatMessage({ name: 'DASH', message: "it's been a long time since i used this computer" });
+        setChatMessage({ name: 'ENNA', message: "it's been a long time since i used this computer" });
       }, 1000);
     }} />;
   }
@@ -45,7 +45,7 @@ function App() {
       if (app.id === id) {
         if (!app.isOpen) {
           if (id === 'Trash') {
-            setChatMessage({ name: 'DASH', message: 'i hated putting that in here' });
+            setChatMessage({ name: 'Enna', message: 'i hated putting that in here' });
           }
           setActiveZIndex(prev => prev + 1);
           return { ...app, isOpen: true, zIndex: activeZIndex + 1 };
@@ -80,9 +80,9 @@ function App() {
 
       {/* Render open windows */}
       {apps.filter(a => a.isOpen).map(app => (
-        <Window 
-          key={app.id} 
-          title={app.title} 
+        <Window
+          key={app.id}
+          title={app.title}
           defaultPosition={app.position}
           width={app.width}
           height={app.height}
@@ -101,12 +101,12 @@ function App() {
       ))}
 
       <Dock toggleApp={toggleApp} />
-      
+
       {chatMessage && (
-        <ChatBox 
-          name={chatMessage.name} 
-          message={chatMessage.message} 
-          onClose={() => setChatMessage(null)} 
+        <ChatBox
+          name={chatMessage.name}
+          message={chatMessage.message}
+          onClose={() => setChatMessage(null)}
         />
       )}
     </>

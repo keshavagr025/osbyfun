@@ -31,7 +31,7 @@ const BootScreen = ({ onComplete }) => {
 
       <div className="boot-text-container">
         <p className="boot-title">SYSTEM NOTICE</p>
-        <p className="boot-desc">rabbit OS has sound. Headphones recommended.</p>
+        <p className="boot-desc">bunny OS has sound. Headphones recommended.</p>
         <p className="boot-desc" style={{ marginTop: '16px' }}>Fullscreen puts the browser away<br />and leaves only the desktop.</p>
 
         <button className="boot-fullscreen-btn" onClick={enterFullscreen}>
@@ -45,7 +45,7 @@ const BootScreen = ({ onComplete }) => {
           <div className="boot-progress-bar-fill" style={{ width: `${progress}%` }}></div>
         </div>
         <p className="boot-progress-text">{progress}%</p>
-        <p className="boot-loading-text">Starting rabbit OS...</p>
+        <p className="boot-loading-text">Starting bunny OS...</p>
       </div>
     </div>
   );
