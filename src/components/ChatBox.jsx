@@ -83,7 +83,7 @@ const ChatBox = ({ name, message: initialMessage, onClose }) => {
     const newHistory = [...history, { role: 'user', text: userText }];
     setHistory([...newHistory, { role: 'assistant', text: '...' }]);
 
-    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+    const apiKey = import.meta.env.VITE_GROQ_API_KEY;
     const responseText = await chatWithDash(newHistory, apiKey);
 
     setHistory([...newHistory, { role: 'assistant', text: responseText }]);

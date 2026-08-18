@@ -75,7 +75,7 @@ function App() {
         <DesktopIcon icon="grid_on" label="Minesweeper" onClick={() => toggleApp('Minesweeper')} />
         <DesktopIcon icon="extension" label="Memory" onClick={() => toggleApp('Memory')} />
         <DesktopIcon icon="delete" label="Trash" onClick={() => toggleApp('Trash')} />
-        <DesktopIcon icon="forum" label="Community" onClick={() => toggleApp('Community')} />
+        <DesktopIcon icon="people_alt" label="Community" onClick={() => toggleApp('Community')} />
       </div>
 
       {/* Render open windows */}

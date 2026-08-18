@@ -8,7 +8,7 @@ import React, { useState, useEffect } from 'react';
 // 2. Uncomment the import above and the Supabase config below.
 // 3. Set USE_SUPABASE to true.
 // =========================================================================
-const USE_SUPABASE = false; 
+const USE_SUPABASE = false;
 
 // const supabaseUrl = 'YOUR_SUPABASE_URL';
 // const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
@@ -48,7 +48,7 @@ const CommunityApp = () => {
       */
     } else {
       // Local Storage Mock Backend
-      const saved = localStorage.getItem('retrium-community-messages');
+      const saved = localStorage.getItem('Bunny-community-messages');
       if (saved) {
         setMessages(JSON.parse(saved));
       }
@@ -60,8 +60,8 @@ const CommunityApp = () => {
     if (!newMessage.name.trim() || !newMessage.text.trim()) return;
 
     const now = new Date();
-    const formattedDate = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ', ' + 
-                          now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    const formattedDate = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ', ' +
+      now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
 
     const newMsg = {
       id: Date.now(),
@@ -84,24 +84,24 @@ const CommunityApp = () => {
       // Local Storage Update
       const updatedMessages = [newMsg, ...messages];
       setMessages(updatedMessages);
-      localStorage.setItem('retrium-community-messages', JSON.stringify(updatedMessages));
+      localStorage.setItem('Bunny-community-messages', JSON.stringify(updatedMessages));
     }
-    
+
     setNewMessage({ name: '', text: '' });
     setIsPosting(false);
   };
 
-  const filteredMessages = messages.filter(msg => 
-    msg.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+  const filteredMessages = messages.filter(msg =>
+    msg.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     msg.text.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <div style={{ display: 'flex', height: '100%', backgroundColor: '#f0f0f0', color: '#000', fontFamily: 'Pixelify Sans, "VT323", monospace', margin: '-12px', boxSizing: 'border-box' }}>
-      
+
       {/* Left Column - Guestbook */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', borderRight: '2px solid #000', padding: '16px' }}>
-        
+
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '2px solid #000', paddingBottom: '12px' }}>
           <div>
             <h2 style={{ margin: 0, fontSize: '24px', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -110,17 +110,17 @@ const CommunityApp = () => {
           </div>
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
             <span style={{ fontSize: '14px' }}>Search</span>
-            <input 
-              type="text" 
-              placeholder="Search comments..." 
+            <input
+              type="text"
+              placeholder="Search comments..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               style={{ padding: '4px 8px', border: '2px solid #000', fontFamily: 'inherit', outline: 'none' }}
             />
-            <button 
+            <button
               onClick={() => setIsPosting(!isPosting)}
-              style={{ 
-                background: '#4a90e2', color: '#fff', border: '2px solid #000', 
+              style={{
+                background: '#4a90e2', color: '#fff', border: '2px solid #000',
                 padding: '6px 12px', fontFamily: 'inherit', cursor: 'pointer',
                 boxShadow: '2px 2px 0 #000'
               }}
@@ -133,14 +133,14 @@ const CommunityApp = () => {
         {isPosting && (
           <form onSubmit={handlePost} style={{ border: '2px solid #000', padding: '12px', marginBottom: '16px', background: '#fff', boxShadow: '4px 4px 0 #000' }}>
             <h3 style={{ margin: '0 0 8px 0' }}>New Message</h3>
-            <input 
+            <input
               type="text" placeholder="Your Name" value={newMessage.name}
-              onChange={e => setNewMessage({...newMessage, name: e.target.value})}
+              onChange={e => setNewMessage({ ...newMessage, name: e.target.value })}
               style={{ display: 'block', width: '100%', marginBottom: '8px', padding: '4px', border: '1px solid #000', fontFamily: 'inherit', boxSizing: 'border-box' }}
             />
-            <textarea 
+            <textarea
               placeholder="Your Message..." value={newMessage.text}
-              onChange={e => setNewMessage({...newMessage, text: e.target.value})}
+              onChange={e => setNewMessage({ ...newMessage, text: e.target.value })}
               rows={3}
               style={{ display: 'block', width: '100%', marginBottom: '8px', padding: '4px', border: '1px solid #000', fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }}
             />
@@ -169,16 +169,16 @@ const CommunityApp = () => {
         <h2 style={{ margin: '0 0 16px 0', fontSize: '24px', borderBottom: '2px solid #000', paddingBottom: '12px' }}>
           Messages from the Creator
         </h2>
-        
+
         <div style={{ flex: 1, border: '4px solid #000', background: '#fff', padding: '24px', boxShadow: '6px 6px 0 #000', overflowY: 'auto' }}>
           <h2 style={{ margin: '0 0 16px 0', fontSize: '22px' }}>Keshav Agrawal</h2>
           <h3 style={{ margin: '0 0 8px 0', fontSize: '18px' }}>Thank you for such Lovely Messages!</h3>
           <p style={{ margin: '0 0 24px 0', fontSize: '12px', color: '#666' }}>Aug 6, 2026, 10:35 PM</p>
-          
+
           <p style={{ fontSize: '16px', lineHeight: '1.6', marginBottom: '16px' }}>
             To everyone who has taken the time to leave a positive comment on this project, thank you so much. Reading your feedback has genuinely meant a lot to me. Every kind word, suggestion, and message of encouragement has made all the time and effort I put into this project feel worthwhile.
           </p>
-          
+
           <p style={{ fontSize: '16px', lineHeight: '1.6' }}>
             I am incredibly grateful for your support, and I am excited to keep improving the project and building even more with your feedback. Thank you for being a part of this journey.
           </p>

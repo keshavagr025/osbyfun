@@ -1,6 +1,6 @@
-# Retrium OS
+# Bunny OS
 
-Retrium OS is a retro-inspired, desktop-in-browser operating system simulator built with React and Vite. It aims to recreate the classic computing experience directly in your web browser, complete with a boot sequence, interactive desktop, window management, and a suite of functional applications.
+Bunny OS is a retro-inspired, desktop-in-browser operating system simulator built with React and Vite. It aims to recreate the classic computing experience directly in your web browser, complete with a boot sequence, interactive desktop, window management, and a suite of functional applications.
 
 ## Features
 

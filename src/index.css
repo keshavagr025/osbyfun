@@ -432,6 +432,7 @@ body {
   box-shadow: 2px 2px 0px #000;
   padding: 4px 12px;
 }
+
 .retro-btn:active {
   box-shadow: none;
   transform: translate(2px, 2px);
@@ -450,6 +451,7 @@ body {
   border-right: 2px solid #808080;
   border-bottom: 2px solid #808080;
 }
+
 .minesweeper-header {
   display: flex;
   justify-content: space-between;
@@ -463,7 +465,9 @@ body {
   border-bottom: 2px solid #fff;
   margin-bottom: 12px;
 }
-.minesweeper-score, .minesweeper-time {
+
+.minesweeper-score,
+.minesweeper-time {
   background: #000;
   color: #ff0000;
   font-family: 'VT323', monospace;
@@ -471,6 +475,7 @@ body {
   padding: 2px 6px;
   border: 1px solid #808080;
 }
+
 .minesweeper-face {
   font-size: 20px;
   width: 36px;
@@ -480,6 +485,7 @@ body {
   justify-content: center;
   padding: 0;
 }
+
 .minesweeper-grid {
   display: grid;
   grid-template-columns: repeat(8, 30px);
@@ -489,6 +495,7 @@ body {
   border-right: 2px solid #fff;
   border-bottom: 2px solid #fff;
 }
+
 .minesweeper-cell {
   width: 30px;
   height: 30px;
@@ -505,23 +512,49 @@ body {
   cursor: pointer;
   user-select: none;
 }
+
 .minesweeper-cell.revealed {
   background: #e0e0e0;
   border: 1px solid #808080;
   border-right: 1px dotted #808080;
   border-bottom: 1px dotted #808080;
 }
+
 .minesweeper-cell.mine {
   background: #ff0000;
 }
-.minesweeper-cell[data-neighbors="1"] { color: #0000ff; }
-.minesweeper-cell[data-neighbors="2"] { color: #008000; }
-.minesweeper-cell[data-neighbors="3"] { color: #ff0000; }
-.minesweeper-cell[data-neighbors="4"] { color: #000080; }
-.minesweeper-cell[data-neighbors="5"] { color: #800000; }
-.minesweeper-cell[data-neighbors="6"] { color: #008080; }
-.minesweeper-cell[data-neighbors="7"] { color: #000000; }
-.minesweeper-cell[data-neighbors="8"] { color: #808080; }
+
+.minesweeper-cell[data-neighbors="1"] {
+  color: #0000ff;
+}
+
+.minesweeper-cell[data-neighbors="2"] {
+  color: #008000;
+}
+
+.minesweeper-cell[data-neighbors="3"] {
+  color: #ff0000;
+}
+
+.minesweeper-cell[data-neighbors="4"] {
+  color: #000080;
+}
+
+.minesweeper-cell[data-neighbors="5"] {
+  color: #800000;
+}
+
+.minesweeper-cell[data-neighbors="6"] {
+  color: #008080;
+}
+
+.minesweeper-cell[data-neighbors="7"] {
+  color: #000000;
+}
+
+.minesweeper-cell[data-neighbors="8"] {
+  color: #808080;
+}
 
 /* Memory Match */
 .memory-app {
@@ -533,23 +566,27 @@ body {
   color: #fff;
   position: relative;
 }
+
 .memory-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
 }
+
 .memory-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
   flex: 1;
 }
+
 .memory-card {
   background-color: transparent;
   perspective: 1000px;
   cursor: pointer;
 }
+
 .memory-card-inner {
   position: relative;
   width: 100%;
@@ -557,10 +594,13 @@ body {
   transition: transform 0.6s;
   transform-style: preserve-3d;
 }
+
 .memory-card.flipped .memory-card-inner {
   transform: rotateY(180deg);
 }
-.memory-card-front, .memory-card-back {
+
+.memory-card-front,
+.memory-card-back {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -574,15 +614,18 @@ body {
   border: 2px solid #000;
   box-shadow: 2px 2px 0px #000;
 }
+
 .memory-card-front {
   background-color: #ffbd2e;
   color: #000;
   font-family: 'Pixelify Sans', sans-serif;
 }
+
 .memory-card-back {
   background-color: #fff;
   transform: rotateY(180deg);
 }
+
 .memory-win {
   position: absolute;
   top: 50%;
@@ -598,9 +641,17 @@ body {
   text-align: center;
   animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
+
 @keyframes popIn {
-  0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
-  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
 }
 
 /* --- ChatBox Styles --- */
@@ -706,8 +757,15 @@ body {
 }
 
 @keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(4px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(4px);
+  }
 }
 
 .chat-input-wrapper {
@@ -716,7 +774,7 @@ body {
   gap: 8px;
   margin-top: 12px;
   padding-top: 8px;
-  border-top: 2px dashed rgba(0,0,0,0.2);
+  border-top: 2px dashed rgba(0, 0, 0, 0.2);
 }
 
 .chat-prompt-arrow {
@@ -736,5 +794,5 @@ body {
 }
 
 .chat-reply-input::placeholder {
-  color: rgba(0,0,0,0.4);
+  color: rgba(0, 0, 0, 0.4);
 }
